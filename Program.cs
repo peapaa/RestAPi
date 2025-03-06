@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using RestAPi.Model;
+using RestAPi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,9 +9,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<SchoolContext>(options =>
+builder.Services.AddDbContext<MyDbContext>(options =>
 {
-    options.UseSqlServer("Server=DESKTOP-MKOIUYA;Database=SchoolDB;Trusted_Connection=True;TrustServerCertificate=True;");
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyDB"));
 });
 
 var app = builder.Build();
