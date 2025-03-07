@@ -18,6 +18,11 @@ namespace RestAPi.Data
         public int? CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public Category Category { get; set; }
+        public ICollection<OrderDetails> OrderDetails { get; set; }
+        public Product()
+        {
+            OrderDetails = new List<OrderDetails>();
+        }
 
     }
 }

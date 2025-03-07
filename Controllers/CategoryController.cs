@@ -18,8 +18,16 @@ namespace RestAPi.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var listCategories = _context.Categories.ToList();
-            return Ok(listCategories);
+            try
+            {
+
+                var listCategories = _context.Categories.ToList();
+                return Ok(listCategories);
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("{id}")]
@@ -37,11 +45,58 @@ namespace RestAPi.Controllers
         }
 
         [HttpPost]
+        //[Authorize]
         public IActionResult CreateCategory(CategoryModel model)
         {
-            _context.Add(model);
-            _context.SaveChanges();
+            try
+            {
 
+                var category = new Category
+                {
+                    CategoryName = model.Name
+                };
+                _context.Add(category);
+                _context.SaveChanges();
+                //return Ok(category);
+                return StatusCode(StatusCodes.Status201Created, category);
+            }
+
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateCategoryById(int id, CategoryModel model)
+        {
+            var category = _context.Categories.SingleOrDefault(category => category.CategoryId == id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+            category.CategoryName = model.Name;
+            _context.SaveChanges();
+            //return Ok(category);
+            return StatusCode(StatusCodes.Status204NoContent, category);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteById(int id)
+        {
+            var category = _context.Categories.SingleOrDefault(category => category.CategoryId == id);
+            if (category != null)
+            {
+                _context.Remove(category);
+                _context.SaveChanges();
+                //return Ok(category);
+                return StatusCode(StatusCodes.Status200OK, category);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
