@@ -14,27 +14,62 @@ namespace RestAPi.Services
 
         public List<CategoryVM> GetAll()
         {
-            throw new NotImplementedException();
+            var categories = _context.Categories.Select(c => new CategoryVM
+            {
+                CategoryId = c.CategoryId,
+                CategoryName = c.CategoryName
+            }).ToList();
+            return categories;
         }
 
-        public CategoryVM GetById(int id)
+        public CategoryVM? GetById(int id)
         {
-            throw new NotImplementedException();
+            var category = _context.Categories.FirstOrDefault(c => c.CategoryId == id);
+            if (category != null)
+            {
+                return new CategoryVM
+                {
+                    CategoryId = category.CategoryId,
+                    CategoryName = category.CategoryName
+                };
+            }
+            return null;
         }
 
         public CategoryVM Add(CategoryModel category)
         {
-            throw new NotImplementedException();
+            var newCategory = new Category
+            {
+                CategoryName = category.Name
+            };
+            _context.Categories.Add(newCategory);
+            _context.SaveChanges();
+            return new CategoryVM
+            {
+                CategoryId = newCategory.CategoryId,
+                CategoryName = newCategory.CategoryName
+            };
         }
 
         public void Update(int id, CategoryModel category)
         {
-            throw new NotImplementedException();
+            var categoryUpdated = _context.Categories.FirstOrDefault(c => c.CategoryId == id);
+            if (categoryUpdated != null)
+            {
+                categoryUpdated.CategoryName = category.Name;
+                _context.SaveChanges();
+
+            }
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var category = _context.Categories.FirstOrDefault(c => c.CategoryId == id);
+            if (category != null)
+            {
+                _context.Categories.Remove(category);
+                _context.SaveChanges();
+            }
         }
     }
 }

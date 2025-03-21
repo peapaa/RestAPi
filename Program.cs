@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RestAPi.Data;
+using RestAPi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,12 @@ builder.Services.AddDbContext<MyDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyDB"));
 });
+
+builder.Services.AddScoped<ICategoryRepo>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyDB"));
+});
+
 
 builder.Services.AddAuthentication();
 
